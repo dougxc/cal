@@ -1,0 +1,177 @@
+:root {
+    --neon-pink: #ff00ff;
+    --neon-blue: #00ffff;
+    --neon-purple: #bc13fe;
+    --bg-dark: #050505;
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: var(--bg-dark);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: white;
+    touch-action: none;
+}
+
+#game-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+canvas {
+    display: block;
+}
+
+/* UI Overlays */
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: rgba(5, 5, 5, 0.9);
+    z-index: 10;
+    text-align: center;
+    transition: opacity 0.5s ease;
+}
+
+.hidden {
+    display: none !important;
+    opacity: 0;
+}
+
+h1 {
+    font-size: 2.5rem;
+    color: var(--neon-blue);
+    text-shadow: 0 0 10px var(--neon-blue), 0 0 20px var(--neon-purple);
+    margin-bottom: 2rem;
+}
+
+.btn {
+    padding: 15px 40px;
+    font-size: 1.2rem;
+    background: transparent;
+    color: var(--neon-pink);
+    border: 2px solid var(--neon-pink);
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 0 10px var(--neon-pink);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transition: all 0.3s;
+}
+
+.btn:active {
+    background: var(--neon-pink);
+    color: white;
+    box-shadow: 0 0 30px var(--neon-pink);
+}
+
+/* Sibling Mode Toggle */
+.toggle-container {
+    margin-top: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+.switch input { opacity: 0; width: 0; height: 0; }
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #333;
+    transition: .4s;
+    border-radius: 34px;
+    border: 1px solid var(--neon-blue);
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px; width: 26px;
+    left: 4px; bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider { background-color: var(--neon-purple); }
+input:checked + .slider:before { transform: translateX(26px); }
+
+/* Card Popup */
+#reveal-card {
+    background: linear-gradient(135deg, #1a1a1a 0%, #000 100%);
+    border: 3px solid var(--neon-blue);
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 0 40px var(--neon-blue);
+    max-width: 80%;
+    transform: scale(0.8);
+    animation: popIn 0.5s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes popIn {
+    to { transform: scale(1); }
+}
+
+.placeholder-img {
+    width: 250px;
+    height: 180px;
+    background: #222;
+    border: 1px dashed var(--neon-pink);
+    margin: 20px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+.placeholder-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.sibling-photo-container {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid var(--neon-blue);
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 5;
+    background: #222;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 10px var(--neon-blue);
+}
+
+.sibling-photo-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}

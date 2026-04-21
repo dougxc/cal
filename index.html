@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Birthday Reveal: 40th Edition</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Matter.js for physics -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+    <!-- Canvas Confetti for celebration -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+
+    <div id="game-container">
+        <!-- Start Screen -->
+        <div id="start-screen" class="overlay">
+            <h1>NEBULA 40</h1>
+            <p style="margin-bottom: 20px; color: #888;">Tilt your phone to navigate</p>
+            <button id="start-btn" class="btn">Start Game</button>
+            <div class="toggle-container">
+                <span>Sibling Mode</span>
+                <label class="switch">
+                    <input type="checkbox" id="sibling-mode">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Win Screen -->
+        <div id="win-screen" class="overlay hidden">
+            <div id="reveal-card">
+                <h1 style="margin: 0; font-size: 2rem;">Happy 40th!</h1>
+                <p style="color: var(--neon-pink); margin: 10px 0;">Time to upgrade your nest.</p>
+                <div class="placeholder-img">
+                    <img id="gift-img" alt="Birthday Gift">
+                    <div id="gift-fallback" style="text-align: center;">
+                        <span style="font-size: 2rem;">🛏️</span><br>
+                        [New Luxury Bed Set]
+                    </div>
+                </div>
+                <button onclick="location.reload()" class="btn" style="padding: 10px 25px; font-size: 0.9rem;">Play Again</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+    <script>
+        // Handle image fallbacks
+        document.getElementById('gift-img').onerror = function() {
+            this.style.display = 'none';
+            document.getElementById('gift-fallback').style.display = 'block';
+        };
+    </script>
+</body>
+</html>
