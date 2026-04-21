@@ -14,7 +14,7 @@ This repository is pre-configured to deploy automatically to **GitHub Pages** vi
 
 1. Push your changes to the `main` branch.
 2. Monitor the progress in the **Actions** tab of your repository.
-3. The game will be live at `https://<your-username>.github.io/<repo-name>/`.
+3. The game will be live at [https://dougxc.github.io/cal/](https://dougxc.github.io/cal/).
 
 ## 🛠️ Customization
 
