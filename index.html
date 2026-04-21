@@ -46,6 +46,41 @@
 
     <script src="game.js"></script>
     <script>
+        // PWA Standalone Detection and Install Logic
+        let deferredPrompt;
+        const installScreen = document.getElementById('install-screen');
+        const installBtn = document.getElementById('install-btn');
+        const iosInstructions = document.getElementById('ios-instructions');
+
+        const isStandalone = () => window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+
+        if (!isStandalone()) {
+            installScreen.classList.remove('hidden');
+            
+            // Handle Android/Chrome "beforeinstallprompt"
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                installBtn.style.display = 'block';
+            });
+
+            // Handle iOS detection
+            const isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            if (isiOS) {
+                iosInstructions.style.display = 'block';
+            }
+        }
+
+        installBtn.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    installScreen.classList.add('hidden');
+                }
+            }
+        });
+
         // Handle image fallbacks
         document.getElementById('gift-img').onerror = function() {
             this.style.display = 'none';

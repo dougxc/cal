@@ -144,15 +144,15 @@ function createLevel() {
         Composite.add(engine.world, hBody);
     });
 
-    // 3. Goal as photo
-    goal = Bodies.circle(unitX * 8, unitY * 1.5, 40, { 
+    // 3. Goal as photo (Doubled size)
+    goal = Bodies.circle(unitX * 8, unitY * 1.5, 80, { 
         isStatic: true, 
         isSensor: true, 
         render: { 
             sprite: {
                 texture: assets.goal,
-                xScale: 0.15, // Scale as needed
-                yScale: 0.15
+                xScale: 0.3, 
+                yScale: 0.3
             }
         } 
     });
