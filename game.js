@@ -2,7 +2,8 @@ const { Engine, Render, Runner, Bodies, Composite, Events, World, Body } = Matte
 
 let engine, render, runner, ball;
 let siblingMode = false;
-const startPos = { x: 50, y: 50 };
+// 1. Reversed positions: Start at bottom center, Goal at top center
+const startPos = { x: window.innerWidth / 2, y: window.innerHeight - 80 };
 const holes = [];
 let goal;
 
@@ -15,7 +16,7 @@ const config = {
     restitution: 0.6
 };
 
-// Asset Paths (Placeholders)
+// Asset Paths
 const assets = {
     sounds: {
         bounce: 'assets/sounds/bounce.mp3',
@@ -28,7 +29,8 @@ const assets = {
         'assets/photos/sibling2.png',
         'assets/photos/sibling3.png'
     ],
-    gift: 'assets/photos/gift.jpg'
+    gift: 'assets/photos/gift.jpg',
+    goal: 'assets/photos/handsome-man.png' // 3. Custom goal photo
 };
 
 // Sound helper
@@ -84,7 +86,6 @@ function initGame() {
                 winGame();
             }
 
-            // Wall bounce sound
             if (bodyA === ball || bodyB === ball) {
                 if (!holes.includes(bodyA) && !holes.includes(bodyB) && bodyA !== goal && bodyB !== goal) {
                     playSound('bounce');
@@ -97,7 +98,7 @@ function initGame() {
         if (siblingMode && runner.enabled) {
             createSiblingTrail(ball.position.x, ball.position.y);
         }
-    }, 400); // Slower interval for photos
+    }, 400);
 }
 
 function createLevel() {
@@ -117,23 +118,24 @@ function createLevel() {
     const unitX = w / 10;
     const unitY = h / 10;
 
+    // Adjusted "40" layout for bottom-to-top flow
     const num4 = [
-        Bodies.rectangle(unitX * 2, unitY * 3, 20, unitY * 3, { isStatic: true, render: wallStyle }),
-        Bodies.rectangle(unitX * 3, unitY * 4.5, unitX * 2, 20, { isStatic: true, render: wallStyle }),
-        Bodies.rectangle(unitX * 4, unitY * 3, 20, unitY * 5, { isStatic: true, render: wallStyle })
+        Bodies.rectangle(unitX * 3, unitY * 6, 20, unitY * 3, { isStatic: true, render: wallStyle }), // left
+        Bodies.rectangle(unitX * 4, unitY * 7.5, unitX * 2, 20, { isStatic: true, render: wallStyle }), // cross
+        Bodies.rectangle(unitX * 5, unitY * 6, 20, unitY * 5, { isStatic: true, render: wallStyle })  // right
     ];
 
     const num0 = [
-        Bodies.rectangle(unitX * 7, unitY * 3, 20, unitY * 4, { isStatic: true, render: wallStyle }),
-        Bodies.rectangle(unitX * 9, unitY * 3, 20, unitY * 4, { isStatic: true, render: wallStyle }),
-        Bodies.rectangle(unitX * 8, unitY * 1, unitX * 2, 20, { isStatic: true, render: wallStyle }),
-        Bodies.rectangle(unitX * 8, unitY * 5, unitX * 2, 20, { isStatic: true, render: wallStyle })
+        Bodies.rectangle(unitX * 7, unitY * 4, 20, unitY * 3, { isStatic: true, render: wallStyle }),
+        Bodies.rectangle(unitX * 9, unitY * 4, 20, unitY * 3, { isStatic: true, render: wallStyle }),
+        Bodies.rectangle(unitX * 8, unitY * 2.5, unitX * 2, 20, { isStatic: true, render: wallStyle }),
+        Bodies.rectangle(unitX * 8, unitY * 5.5, unitX * 2, 20, { isStatic: true, render: wallStyle })
     ];
 
     const holePositions = [
-        { x: unitX * 5.5, y: unitY * 4 },
-        { x: unitX * 3, y: unitY * 7 },
-        { x: unitX * 8, y: unitY * 3 }
+        { x: unitX * 2, y: h/2 },
+        { x: unitX * 8, y: unitY * 7 },
+        { x: unitX * 5, y: unitY * 2 }
     ];
 
     holePositions.forEach(pos => {
@@ -142,10 +144,17 @@ function createLevel() {
         Composite.add(engine.world, hBody);
     });
 
-    goal = Bodies.circle(unitX * 8.5, unitY * 8.5, 30, { 
+    // 3. Goal as photo
+    goal = Bodies.circle(unitX * 8, unitY * 1.5, 40, { 
         isStatic: true, 
         isSensor: true, 
-        render: { fillStyle: '#ffd700', strokeStyle: '#ffffff', lineWidth: 4 } 
+        render: { 
+            sprite: {
+                texture: assets.goal,
+                xScale: 0.15, // Scale as needed
+                yScale: 0.15
+            }
+        } 
     });
 
     Composite.add(engine.world, [...num4, ...num0, goal]);
@@ -162,7 +171,6 @@ function winGame() {
     Runner.stop(runner);
     document.getElementById('win-screen').classList.remove('hidden');
     
-    // Set gift image if exists
     const giftImg = document.getElementById('gift-img');
     if (giftImg) giftImg.src = assets.gift;
 
@@ -222,6 +230,17 @@ function createSiblingTrail(x, y) {
 document.getElementById('start-btn').addEventListener('click', async () => {
     siblingMode = document.getElementById('sibling-mode').checked;
     playSound('start');
+
+    // 2. Lock Orientation (Standard API)
+    if (screen.orientation && screen.orientation.lock) {
+        try {
+            // Requesting fullscreen is often required for orientation lock
+            await document.documentElement.requestFullscreen();
+            await screen.orientation.lock('portrait');
+        } catch (e) {
+            console.log("Orientation lock not supported or failed", e);
+        }
+    }
 
     if (typeof DeviceOrientationEvent.requestPermission === 'function') {
         try {
